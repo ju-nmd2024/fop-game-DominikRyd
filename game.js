@@ -1,25 +1,83 @@
-/*function setup() {
-  createCanvas(800, 600);
-}
-
-function draw() {
-  background(255, 140, 0);
-}
-*/
 function startScreen(){
-    background(100,100,100);
+    background(135,206,235);
+
+    push ();
+    fill(0,150,0);
+    rect (0,500,400,100);
+    fill (249,215,28);
+    ellipse(0,0,160,160);
+    pop ();
+
     text("start",180,50);
 }
 
 function gameScreen(){
-    background(100,100,100);
+    background(135,206,235);
+
     text("Game",180,50);
+
+    push ();
+    fill(0,150,0);
+    rect (0,500,400,100);
+    fill (249,215,28);
+    ellipse(0,0,160,160);
+    pop ();
+    push();
+    translate(200,y);
+    rotate(7.8);
+    cat(0,0,0.5,keyIsDown(87));
+    pop();
+    
+    if (keyIsDown(87)) {
+        acc = -0.3; 
+    } else {
+        acc = +0.3 + 0.3*1.05;
+    }
+
+    velocity += acc; 
+    velocity = constrain(velocity, -10, 14); 
+    y += velocity; 
+
+
+
+    y = constrain(y, 0, height - 100);
 }
 
-function resultScreen(){
-    background(50,50,50);
-    text("Result",180,50);
+function resultScreenLoss(){
+    background(135,206,235);
+
+    push ();
+    fill(0,150,0);
+    rect (0,500,400,100);
+    fill (249,215,28);
+    ellipse(0,0,160,160);
+    fill(200,0,0);
+    translate(200,520);
+    ellipse(0,0,100,30);
+    
+    pop ();
+    text("You went too fast :(",150,250);
+    
 }
+
+function resultScreenWin(){
+    background(135,206,235);
+    push ();
+    
+    fill(0,150,0);
+    rect (0,500,400,100);
+    fill (249,215,28);
+    ellipse(0,0,160,160);
+    translate(180,490);
+    cat(0,0,0.5);
+    pop ();
+    text("You landed the kitty :)",150,250);
+    
+}
+let y = 1;
+let velocity = 0; 
+let acc = 0; 
+
 
 
 
@@ -78,22 +136,20 @@ function cat(x,y,s,meow){
     
     if (meow) {
         push ();
-        stroke(127,127,127);
+        stroke(0,200,200);
         strokeWeight(2);
         line(x+135*s,y-8*s,x+160*s,y+-9*s);
         line(x+135*s,y-13*s,x+160*s,y+-19*s);
         line(x+135*s,y-3*s,x+160*s,y+-1*s);
         line(x+135*s,y+2*s,x+160*s,y+9*s);
         line(x+135*s,y-18*s,x+160*s,y-29*s);
+        
+        stroke(127,127,127);
         strokeWeight(2);
-        //line(x+114*s,y-18*s,x+120*s,y+-16*s);
+        line(x+114*s,y-18*s,x+120*s,y+-16*s);
         pop();
     } else {
-        
-       
-        
-    }
-    //Eye
+      //Eye
         push ();
         fill(255,255,255);
         ellipse(x+115*s,y-17*s,10*s,7*s);
@@ -104,7 +160,11 @@ function cat(x,y,s,meow){
         fill(0,0,0);
         ellipse(x+116*s,y-17*s,3*s,7*s);
         
-        pop ();
+        pop ();  
+       
+        
+    }
+    
     //Nose
     push ();
 
@@ -117,7 +177,7 @@ function cat(x,y,s,meow){
     push ();
 
     strokeWeight(6*s);
-    line (x,y+5*s,x-70,y+1*s);
+    line (x,y+5*s,x-70*s,y+1*s);
 
     pop ();
     
@@ -131,7 +191,6 @@ cat(-110, 9,1 , mouseIsPressed);
 */
 function setup (){
     createCanvas(400,560);
-    fill (255,255,255);
     
 }
 let state = "start";
@@ -142,20 +201,41 @@ function draw(){
         startScreen();
     } else if (state === "game") { 
         gameScreen();
-        gameTimer = gameTimer + 1;
-        if (gameTimer >= 100) {
-        gameTimer = 0;
-        state = "result";
+        
+        
+        
+        if (y >= height - 100 && velocity > 7) {
+            state = "resultLoss";
+        }  else if (y >= height - 100 && velocity < 7) {
+            state = "resultWin";
+        }  
+           
+
+
+        
+
+    } else if (state === "resultLoss") {
+        resultScreenLoss();
+        y = 1;
+        velocity = 0;
+        acc = 0;
+
+    } else if (state === "resultWin") {
+        resultScreenWin();
+        y = 1;
+        velocity = 0;
+        acc = 0;
+
     }
-    } else if (state === "result") {
-        resultScreen();
-    }
+    
 }
 
 function mouseClicked(){
    if (state === "start"){
     state = "game";
-   }  else if (state === "result"){
+   }  else if (state === "resultLoss"){
+    state = "game";
+   }else if (state === "resultWin"){
     state = "game";
    }
 }
