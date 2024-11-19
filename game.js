@@ -8,13 +8,14 @@ function startScreen(){
     ellipse(0,0,160,160);
     pop ();
 
-    text("start",180,50);
+    textSize(25);
+    text("start",160,50);
 }
 
 function gameScreen(){
     background(135,206,235);
 
-    text("Game",180,50);
+    text("Game",160,50);
 
     push ();
     fill(0,150,0);
@@ -27,20 +28,22 @@ function gameScreen(){
     rotate(7.8);
     cat(0,0,0.5,keyIsDown(87));
     pop();
-    
+
+    /*
+    when pressing W the cat will move uppwards otherwise
+    it will continue falling downwards
+    */
     if (keyIsDown(87)) {
         acc = -0.3; 
     } else {
         acc = +0.3 + 0.3*1.05;
     }
 
+    // adding acceleration to the current velocity
     velocity += acc; 
-    velocity = constrain(velocity, -10, 14); 
+ 
+    //Updating the cats y position
     y += velocity; 
-
-
-
-    y = constrain(y, 0, height - 100);
 }
 
 function resultScreenLoss(){
@@ -56,7 +59,7 @@ function resultScreenLoss(){
     ellipse(0,0,100,30);
     
     pop ();
-    text("You went too fast :(",150,250);
+    text("You went too fast :(",105,250);
     
 }
 
@@ -71,9 +74,11 @@ function resultScreenWin(){
     translate(180,490);
     cat(0,0,0.5);
     pop ();
-    text("You landed the kitty :)",150,250);
+
+    text("You landed the kitty :)",85,250);
     
 }
+//Defining the position of the cat, velocity and acceleration
 let y = 1;
 let velocity = 0; 
 let acc = 0; 
@@ -88,7 +93,7 @@ function cat(x,y,s,meow){
     going backwards because it will fall head first.
     */
     
-    //translate (x/x,y/y);
+    
    
     //Body
     fill (0,0,0);
@@ -134,9 +139,10 @@ function cat(x,y,s,meow){
     //Ear
     triangle(x+110*s,y-10*s,x+110*s,y-35*s,x+90*s,y-7*s);
     
+    // When button W is pressed the cat wil close its eye start meowing
     if (meow) {
         push ();
-        stroke(0,200,200);
+        stroke(100,100,200);
         strokeWeight(2);
         line(x+135*s,y-8*s,x+160*s,y+-9*s);
         line(x+135*s,y-13*s,x+160*s,y+-19*s);
@@ -182,17 +188,13 @@ function cat(x,y,s,meow){
     pop ();
     
 }
-/*
-function draw() {
-translate (260,200);
-rotate (7.84);
-cat(-110, 9,1 , mouseIsPressed);
-}
-*/
+
 function setup (){
     createCanvas(400,560);
     
 }
+
+//Defines the games state to make it always start up with the startscreen 
 let state = "start";
 let gameTimer = 0;
 
@@ -202,26 +204,28 @@ function draw(){
     } else if (state === "game") { 
         gameScreen();
         
-        
-        
-        if (y >= height - 100 && velocity > 7) {
+        if (y >= 470 && velocity > 4) {
             state = "resultLoss";
-        }  else if (y >= height - 100 && velocity < 7) {
+        }  else if (y >= 470 && velocity <= 4) {
             state = "resultWin";
         }  
-           
-
-
-        
-
-    } else if (state === "resultLoss") {
+    } 
+    
+    //If the cat is going too fast it will go from the gamesceern to the loss screen
+    else if (state === "resultLoss") {
         resultScreenLoss();
+        
+        //Reseting the values inbefore the game starts again
         y = 1;
         velocity = 0;
         acc = 0;
 
-    } else if (state === "resultWin") {
+    } 
+    //If the cat is going the proper speed the game goes to the win screen
+    else if (state === "resultWin") {
         resultScreenWin();
+        
+        //Reseting the values inbefore the game starts again
         y = 1;
         velocity = 0;
         acc = 0;
@@ -230,12 +234,13 @@ function draw(){
     
 }
 
+//Changes the programs state depending on what screen is currently showing
 function mouseClicked(){
    if (state === "start"){
     state = "game";
    }  else if (state === "resultLoss"){
     state = "game";
-   }else if (state === "resultWin"){
+   }  else if (state === "resultWin"){
     state = "game";
    }
 }
