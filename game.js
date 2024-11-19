@@ -26,14 +26,14 @@ function gameScreen(){
     push();
     translate(200,y);
     rotate(7.8);
-    cat(0,0,0.5,keyIsDown(87));
+    cat(0,0,0.5,keyIsDown(32));
     pop();
 
     /*
-    when pressing W the cat will move uppwards otherwise
+    when pressing Spacebar the cat will move uppwards otherwise
     it will continue falling downwards
     */
-    if (keyIsDown(87)) {
+    if (keyIsDown(32)) {
         acc = -0.3; 
     } else {
         acc = +0.3 + 0.3*1.05;
@@ -139,7 +139,7 @@ function cat(x,y,s,meow){
     //Ear
     triangle(x+110*s,y-10*s,x+110*s,y-35*s,x+90*s,y-7*s);
     
-    // When button W is pressed the cat wil close its eye start meowing
+    // When Spacebar is pressed the cat wil close its eye start meowing
     if (meow) {
         push ();
         stroke(100,100,200);
